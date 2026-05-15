@@ -1,19 +1,61 @@
 # -*- coding: utf-8 -*-
 """
+Created on Fri May 15 15:41:06 2026
+
+@author: zacha
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Fri May 15 14:39:12 2026
 
 @author: zacha
 """
 import numpy as np
 import matplotlib.pyplot as plt
-
+from math import sqrt
 #Create data points
 np.random.seed(0)
 x_data = [0,1,1]
 y_data = [0,0,1]
+y_err = [0.1,1,0.1]
+
+#weights of error
+w = []
+for i in range(len(y_err)):
+    wi = 1/y_err[i]**2    
+    w.append(wi)
+#weights of each error
+wx = []
+wy = []
+wx2 = []
+wxy = []
+for i in range(len(w)):
+    a = w[i]*x_data[i]
+    wx.append(a)
+    b = w[i]*y_data[i]
+    wy.append(b)
+    c = w[i]*x_data[i]**2
+    wx2.append(c)
+    d = w[i]*x_data[i]*y_data[i]
+    wxy.append(d)
+#sum of weights of error
+w_sum = sum(w)
+wx_sum = sum(wx)
+wy_sum = sum(wy)
+wx2_sum = sum(wx2)
+wxy_sum = sum(wxy)
+
+delta = w_sum * wx2_sum - wx_sum**2
+A = (wx2_sum * wy_sum - wx_sum * wxy_sum) / delta
+B = (w_sum * wxy_sum - wx_sum * wy_sum) / delta
+
+sig_A = sqrt(wx2_sum / delta)
+sig_B = sqrt(w_sum / delta)
 
 
 #linear equation outputting y values
+
 def linear_func(x, slope, intercept):
     return slope * x + intercept 
 
