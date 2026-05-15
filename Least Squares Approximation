@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May 15 14:39:12 2026
+
+@author: zacha
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -33,3 +39,17 @@ n = len(x_data)
 m = (n * xy_sum - x_sum * y_sum) / (n * x_2sum - x_sum**2)
 b = (y_sum - m * x_sum)/n
 
+
+xi = []
+for i in range(len(x_data)):
+   t = linear_func(x_data[i], m, b) 
+   
+   xi.append(t)
+   
+plt.plot(x_data, xi)
+
+plt.scatter(x_data, y_data)
+plt.xlabel('x values')
+plt.ylabel('y values')
+plt.title("Data Values")
+plt.show()
