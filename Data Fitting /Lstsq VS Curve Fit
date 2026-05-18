@@ -1,0 +1,32 @@
+import numpy as np
+from scipy import optimize
+import matplotlib.pyplot as plt
+#List of data points
+x = np.array([0,1,1])
+y = np.array([0,0,1])
+A = np.vstack([x, np.ones(len(x))]).T
+
+
+def func(x, a, b):
+    y = a * x + b
+    return y
+
+Beta = optimize.curve_fit(func, xdata = x, ydata = y)[0]
+
+print("curve_fit gives", Beta)
+
+
+y = y[:np.newaxis]
+
+Alpha = np.linalg.lstsq(A, y, rcond=None)[0]
+print("lstsq method give", Alpha)
+
+plt.scatter(x, y, label='Data')
+plt.plot(x, Alpha[0]*x + Alpha[1], color='red', label='Lstsq Fit')
+plt.plot(x, Beta[0]*x + Beta[1], color='green', label = 'curve fit')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Linear Least Squares Approximation')
+plt.legend()
+plt.grid(True)
+plt.show()
