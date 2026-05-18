@@ -1,0 +1,29 @@
+#python code
+#need to define your own function and the 2nd derivative of the function then find its magnititude to properly use the code. 
+#after defining the functions simply plug in the interval [a,b] and the number of subintervals N
+def f(x)
+    return
+
+def ddf(x)
+    return
+
+
+def trapezoidal (a, b, N):
+    fun = 0
+    h = (b-a)/N # height of function
+    for i in range(1,N):
+        fun = fun + f(a + (i * h))
+        #takes the value from 1 to N-1 and adds them all together
+    
+    return h * abs(0.5 * f(a) + 0.5 * f(b) + fun) #returns the trapezodial value
+
+def trapezoidal_err (a, b, N):
+    fun = 0
+    h = (b-a)/N # height of function
+    for i in range(1,N):
+        fun = fun + f(a + (i * h))
+        #takes the value from 1 to N-1 and adds them all together
+x = (b+a)/2  #a < x < b   
+err = -1*(b-a)**3/(12*N**2) * ddf(x)
+    estimate = h * abs(0.5 * f(a) + 0.5 * f(b) + fun)
+    return estimate, err #returns the trapezodial value
