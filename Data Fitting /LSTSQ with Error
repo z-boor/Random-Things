@@ -1,13 +1,10 @@
-'''
-Start by using the linalg.lstsq to solve for line then use curve fit with sgima for error
-Problem that linalg.lstsq gives a different answer with simga
-'''
 import numpy as np
 from scipy import optimize
 import matplotlib.pyplot as plt
+from math import sqrt
 #List of data points
-x = np.linspace(0,1,11)
-y = 1 + x + x*0.5*np.random.random(len(x))
+x = np.linspace(0,1,101)
+y = 1 + x + x*np.random.random(len(x))
 A = np.vstack([x, np.ones(len(x))]).T
 
 #linear funciton
@@ -33,9 +30,9 @@ t=0
 for i in range(len(y)):   
     t = (y[i]-func(x[i],a,b))**2
     SSE += t
-    
-print(SSE)
-Beta = optimize.curve_fit(func, xdata = x, ydata = y, sigma = SSE)[0] #curve fit with error
+S = sqrt(SSE/(len(y)-2)) #standard Error
+
+Beta = optimize.curve_fit(func, xdata = x, ydata = y, sigma = S)[0] #curve fit with error
 #May be unnecessary rather rjust solve for error and puit it in array or maybe just a value
 
 print("curve_fit gives", Beta)
@@ -44,11 +41,10 @@ print("curve_fit gives", Beta)
 #graph
 plt.plot(x, Alpha[0]*x + Alpha[1], color='red', label='Lstsq Fit')
 plt.plot(x, Beta[0]*x + Beta[1], color='green', label = 'curve fit')
-plt.errorbar(x, y, yerr=SSE, fmt='.', label='Data with Error Bars', capsize=3)
+plt.errorbar(x, y, yerr=S, fmt='.', label='Data with Error Bars', capsize=3)
 plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Linear Least Squares Approximation')
 plt.legend()
 plt.grid(True)
 plt.show()
-
