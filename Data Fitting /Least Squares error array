@@ -1,0 +1,64 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 19 10:13:27 2026
+gives specific error array to use in calculation
+practically take data file then open it in python file to use as the arrays
+This takes error into account but does not calculate the error present in the fitted line
+@author: zacha
+
+"""
+
+
+import numpy as np
+from scipy import optimize
+import matplotlib.pyplot as plt
+#List of data points
+x = np.array([0,1,1])
+y = np.array([0,0,1])
+A = np.vstack([x, np.ones(len(x))]).T
+
+#linear funciton
+def func(x, a, b):
+    y = a * x + b
+    return y
+
+#lstsq method
+y = y[:np.newaxis] #create columns
+
+Alpha = np.linalg.lstsq(A, y, rcond=None)[0] 
+print("lstsq method give", Alpha)
+
+#curve fit
+#Beta1 = optimize.curve_fit(func, xdata = x, ydata = y)[0]
+#print("curve fit without error give", Beta1)
+
+a = Alpha[0] #slope
+b = Alpha[1] #intercept
+y_err = np.array([0.1, 1, 0.1]) #error values
+
+Beta = optimize.curve_fit(func, xdata = x, ydata = y, sigma = y_err)[0] #curve fit with error
+
+SSE = 0
+t=0
+for i in range(len(y)):   
+    t = (y[i]-func(x[i],a,b))**2
+    SSE += t
+Beta1 = optimize.curve_fit(func, xdata = x, ydata = y, sigma = SSE)[0] #curve fit with error
+
+print(SSE)
+print(Beta1)
+
+print("curve_fit gives", Beta)
+
+
+#graph
+plt.plot(x, Alpha[0]*x + Alpha[1], color='red', label='Lstsq Fit')
+plt.plot(x, Beta[0]*x + Beta[1], color='green', label = 'curve fit')
+plt.errorbar(x, y, yerr=y_err, fmt='.', label='Data with Error Bars', capsize=3)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Linear Least Squares Approximation')
+plt.legend()
+plt.grid(True)
+plt.show()
+
